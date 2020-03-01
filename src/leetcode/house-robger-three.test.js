@@ -97,6 +97,9 @@ function _rob(root) {
     ];
 }
 
+/*
+
+*/
 function robOptimal(root) {
     if (root == null) {
         return 0;

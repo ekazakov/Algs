@@ -29,9 +29,17 @@ function getColor(color) {
     return color;
 }
 
-function paintRec(n, data) {
+/*
+Выбор цвета дома зависит от того какой цвет был выбран для предыдущего(нельзя повторить цвет).
+Т.е. выбор цветов для всей цепочки домов зависит от выбора для 1го дома.
+Для первого дома есть 3 варианта покраски, следовательно есть три «маршрута» покраски домов.
+
+Для каждого маршрута рекурсивно посчитаем все доступные комбинации цветов и найдем мин. цену.
+На каждом шаге есть 2 доступных цвета, следовательно будет два рекурсивных вызова.
+*/
+function paintRec(data) {
     function _paint(index, color) {
-        if (index >= n) {
+        if (index >= data.length) {
             return 0;
         }
 
@@ -47,6 +55,80 @@ function paintRec(n, data) {
 
     return Math.min(a, b, c);
 }
+
+/*
+Выбор цвета дома зависит от того какой цвет был выбран для предыдущего(нельзя повторить цвет).
+Т.е. выбор цветов для всей цепочки домов зависит от выбора для 1го дома.
+Для первого дома есть 3 варианта покраски, следовательно есть три «маршрута» покраски домов.
+Заведем три переменных-аккумулятора(инициализируем ценой покраски первого дома)
+и массив(lastColor) для хранния выбранного цвета для текущего дома на маршруте.
+
+Проходимся по списку домов начиная с 1го индекса и на каждом шаге выбираем мин. цену
+из доступных цветов(всегда доступно 2 цвета). Сохраняем выбранный цвет в lastColor.
+И прибавляем цену для выбранного цвета к аккумулятору.
+
+По окончанию цикла находим наименьший из трех аккумуляторов.
+
+
+     0    1    2    3
+---|----|----|----|----|-
+ R   17   16   14   3
+---|----|----|----|----|-
+ G   2    16   3    1
+---|----|----|----|----|-
+ B   1    1    19   8
+---|----|----|----|----|-
+*/
+function _paintOptimal(data) {
+    const lastColor = [0, 1, 2];
+    let a = data[0][0];
+    let b = data[0][1];
+    let c = data[0][2];
+
+    function getMin(i, j) {
+        const color = lastColor[j];
+        const left = data[i][getColor(color - 1)];
+        const right = data[i][getColor(color + 1)];
+
+        if (left < right) {
+            lastColor[j] = getColor(color - 1);
+            return left;
+        }
+
+        lastColor[j] = getColor(color + 1);
+        return right;
+    }
+
+    for (let i = 1; i < data.length; i++) {
+        a += getMin(i, 0);
+        b += getMin(i, 1);
+        c += getMin(i, 2);
+    }
+
+    return Math.min(a, b, c);
+}
+
+/*
+Пред. реш-е можно улучшить. Начнем итерацию с первого индекса и к цене для текущего
+дома каждого цыета будем пребавлять(мутировать) мин. цену покраски для предыдущего дома.
+Т.е. столбец data[i] будет хранить аккумулированные цены для предыдущих шагов маршрута.
+
+По окончанию цикла находим наименьший элемент в последнем столбце.
+*/
+function paintOptimal(data) {
+    function last(color) {
+        return data[data.length - 1][color];
+    }
+
+    for (let i = 1; i < data.length; i++) {
+        data[i][0] += Math.min(data[i - 1][1], data[i - 1][2]);
+        data[i][1] += Math.min(data[i - 1][0], data[i - 1][2]);
+        data[i][2] += Math.min(data[i - 1][0], data[i - 1][1]);
+    }
+
+    return Math.min(last(0), last(1), last(2));
+}
+
 describe('Paint House Problem', () => {
     const data = [
         [17, 2, 1],
@@ -61,11 +143,24 @@ describe('Paint House Problem', () => {
         [15, 7, 2],
         [6, 4, 2]
     ];
-    it('one', () => {
-        expect(paintRec(4, data)).toBe(9);
+
+    describe('Recursive solution', () => {
+        it('one', () => {
+            expect(paintRec(data)).toBe(9);
+        });
+
+        it('two', () => {
+            expect(paintRec(data2)).toBe(12);
+        });
     });
 
-    it('two', () => {
-        expect(paintRec(5, data2)).toBe(12);
+    describe('Optimal solution', () => {
+        it('one', () => {
+            expect(paintOptimal(data)).toBe(9);
+        });
+
+        it('two', () => {
+            expect(paintOptimal(data2)).toBe(12);
+        });
     });
 });
