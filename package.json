@@ -1,18 +1,16 @@
 {
-  "name": "sliding-window",
+  "name": "foo",
   "version": "1.0.0",
   "description": "",
-  "main": "sliding-window/index.js",
   "scripts": {
-    "start": "parcel index.js --open",
-    "build": "parcel build index.js"
+    "start": "",
+    "test": "jest"
   },
   "dependencies": {
+    "jest": "25.1.0",
     "lodash": "4.17.15"
   },
   "devDependencies": {
-    "@babel/core": "7.2.0",
-    "parcel-bundler": "^1.6.1"
-  },
-  "keywords": []
+    "prettier": "1.19.1"
+  }
 }
