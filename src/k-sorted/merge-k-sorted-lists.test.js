@@ -42,49 +42,59 @@ function listToString(head) {
 }
 
 function mergeLists(list1, list2) {
-    let head = null;
-    let cur1 = list1.next;
-    let cur2 = list2.next;
-
-    if (list1.val < list2.val) {
-        head = list1;
-        cur1 = list1.next;
-        cur2 = list2;
-    } else {
-        head = list2;
-        cur2 = list2.next;
-        cur1 = list1;
-    }
-
+    const head = new Node(0);
     let pointer = head;
 
-    while (cur1 || cur2) {
-        if (cur1 == null) {
-            pointer.next = cur2;
-            cur2 = cur2.next;
-        } else if (cur2 == null) {
-            pointer.next = cur1;
-            cur1 = cur1.next;
-        } else if (cur1.val < cur2.val) {
-            pointer.next = cur1;
-            cur1 = cur1.next;
+    while (list1 && list2) {
+        if (list1.val < list2.val) {
+            pointer.next = list1;
+            list1 = list1.next;
         } else {
-            pointer.next = cur2;
-            cur2 = cur2.next;
+            pointer.next = list2;
+            list2 = list2.next;
         }
 
         pointer = pointer.next;
     }
 
-    return head;
+    if (list1) {
+        pointer.next = list1;
+    } else {
+        pointer.next = list2;
+    }
+
+    return head.next;
 }
 
 describe('Merge Two sorted lists', () => {
+    // console.log('list:', listToString(list));
     it('one', () => {
         const list1 = buildList([1, 3, 4]);
         const list2 = buildList([2, 5, 8]);
         const result = buildList([1, 2, 3, 4, 5, 8]);
         expect(mergeLists(list1, list2)).toEqual(result);
-        // console.log('list:', listToString(list));
+    });
+
+    it('two', () => {
+        const list1 = buildList([1, 3, 4]);
+        const list2 = buildList([5, 8, 9]);
+        const result = buildList([1, 3, 4, 5, 8, 9]);
+        expect(mergeLists(list1, list2)).toEqual(result);
+    });
+});
+
+function mergeKSortedLists(lists) {
+    return;
+}
+
+describe('Merge K sorted lists', () => {
+    it('one', () => {
+        const lists = [
+            buildList([1, 3, 4]),
+            buildList([2, 5, 8]),
+            buildList([5, 6, 9, 11, 14])
+        ];
+        const result = buildList([1, 2, 3, 4, 5, 5, 6, 8, 9, 11, 14]);
+        expect(mergeKSortedLists(lists)).toEqual(result);
     });
 });
