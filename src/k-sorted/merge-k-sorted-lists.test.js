@@ -30,7 +30,7 @@ function buildList(items) {
     return head;
 }
 
-function listToString(head) {
+function listToArray(head) {
     const arr = [head.val];
     let current = head;
     while (current.next != null) {
@@ -38,7 +38,11 @@ function listToString(head) {
         arr.push(current.val);
     }
 
-    return arr.join(' -> ');
+    return arr;
+}
+
+function listToString(head) {
+    return listToArray(head).join(' -> ');
 }
 
 function mergeLists(list1, list2) {
@@ -84,7 +88,14 @@ describe('Merge Two sorted lists', () => {
 });
 
 function mergeKSortedLists(lists) {
-    return;
+    let step = 1;
+    while (step < lists.length) {
+        for (let i = 0; i < lists.length - step; i += 2 * step) {
+            lists[i] = mergeLists(lists[i], lists[i + step]);
+        }
+        step *= 2;
+    }
+    return lists[0];
 }
 
 describe('Merge K sorted lists', () => {
@@ -94,7 +105,7 @@ describe('Merge K sorted lists', () => {
             buildList([2, 5, 8]),
             buildList([5, 6, 9, 11, 14])
         ];
-        const result = buildList([1, 2, 3, 4, 5, 5, 6, 8, 9, 11, 14]);
-        expect(mergeKSortedLists(lists)).toEqual(result);
+        const expected = buildList([1, 2, 3, 4, 5, 5, 6, 8, 9, 11, 14]);
+        expect(listToArray(mergeKSortedLists(lists))).toEqual(listToArray(expected));
     });
 });

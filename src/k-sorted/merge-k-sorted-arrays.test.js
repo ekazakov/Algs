@@ -32,7 +32,11 @@ function minChild(heap, index) {
     const leftIndex = index * 2 + 1;
     const rightIndex = index * 2 + 2;
 
-    if (rightIndex > heap.length) {
+    if (heap[leftIndex] == null) {
+        return;
+    }
+
+    if (heap[rightIndex] == null) {
         return leftIndex;
     }
 
@@ -44,16 +48,14 @@ function minChild(heap, index) {
 }
 
 function percolateDown(heap, index) {
-    while (index * 2 + 1 <= heap.length) {
-        const minIndex = minChild(heap, index);
+    let minIndex = minChild(heap, index);
 
-        if (heap[minIndex] > heap[minIndex]) {
-            const tmp = heap[minIndex];
-            heap[minIndex] = heap[index];
-            heap[index] = tmp;
-        }
-
+    while (minIndex != null && heap[index].value > heap[minIndex].value) {
+        const tmp = heap[minIndex];
+        heap[minIndex] = heap[index];
+        heap[index] = tmp;
         index = minIndex;
+        minIndex = minChild(heap, index);
     }
 }
 
@@ -64,6 +66,29 @@ function buildHeap(heap) {
         i -= 1;
     }
 }
+
+/*
+ NOTE: Key Insight
+ Each one of the K arrays will have one element in the heap at all times.
+ One trick we're using is that once we've added all the elements from a given array
+ to the result, we set the value property on its "node" in the heap to Infinity,
+ so it bubbles down to the bottom.
+ The goal here is to eventually fill the heap up with "nodes" with values of Infinity.
+ Once the top node's value is Infinity, we break out of the while loop.
+ */
+
+// Run every element in the arrays through the minHeap         O(NK log(K))
+
+// While the value at the top is not equal to infinity         O(N K) elements
+// Retrieve the top element in the heap                      O(1)
+// Insert value from top element into result                 O(1)
+// Increment the elementIndex                                O(1)
+// If the elementIndex is greater than the length of the array at arrayIndex:
+// Set the top's value to Infinity                         O(1)
+// Otherwise:
+// Update the value to reflect next element in the array   O(1)
+
+// Then bubble down the top element                          O(log(K)) for each element
 
 function mergeKSortedHeap(data) {
     const result = [];
@@ -87,7 +112,7 @@ function mergeKSortedHeap(data) {
         min.elementIndex++;
 
         if (min.elementIndex >= data[min.arrayIndex].length) {
-            min.value = Infinity;
+            min.value = Number.MAX_VALUE;
         } else {
             min.value = data[min.arrayIndex][min.elementIndex];
         }
@@ -124,23 +149,17 @@ function merge2Sorted(arr1, arr2) {
     return result;
 }
 
-function mergeKSortedDivideAndConquer(data) {
-    let i = data.length;
+// O(N * log(K))
+// Iterate over all items of all arrays is O(N)
+// while (step < data.length) loop have log(K) steps(we increase step twice on every iteration).
+// So to find min item takes log(K) times in average for total N items
 
-    /*
-    amount = len(lists)
-    interval = 1
-    while interval < amount:
-        for i in range(0, amount - interval, interval * 2):
-            lists[i] = self.merge2Lists(lists[i], lists[i + interval])
-        interval *= 2
-    return lists[0] if amount > 0 else lists
-*/
+function mergeKSortedDivideAndConquer(data) {
     let step = 1;
     while (step < data.length) {
         // console.log('>> step:', step);
         for (let j = 0; j < data.length - step; j += step * 2) {
-            console.log('j:', j, '(j + step):', j + step);
+            // console.log('j:', j, '(j + step):', j + step);
             data[j] = merge2Sorted(data[j], data[j + step]);
         }
         step *= 2;
@@ -197,15 +216,15 @@ describe('Merge K sorted arrays', () => {
         const result2 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 16, 17, 19];
 
         it('All arrays have the same length', () => {
-            expect(mergeKSortedSimple(data)).toEqual(result);
+            expect(mergeKSortedHeap(data)).toEqual(result);
         });
 
         it('Arrays have different length', () => {
-            expect(mergeKSortedSimple(data2)).toEqual(result2);
+            expect(mergeKSortedHeap(data2)).toEqual(result2);
         });
     });
 
-    describe('Solution with divide and conquer', () => {
+    describe('Solution with divide and conquer O(N * log(K))', () => {
         it('All arrays have the same length', () => {
             const data = [
                 [1, 10, 11, 15],
@@ -217,7 +236,7 @@ describe('Merge K sorted arrays', () => {
             expect(mergeKSortedDivideAndConquer(data)).toEqual(result);
         });
 
-        it.only('Arrays have different length', () => {
+        it('Arrays have different length', () => {
             const data2 = [
                 [1, 10, 11, 15, 16, 19],
                 [2, 4, 9, 14],
@@ -229,7 +248,7 @@ describe('Merge K sorted arrays', () => {
             expect(mergeKSortedDivideAndConquer(data2)).toEqual(result2);
         });
 
-        it.only('Arrays have different length and arrays number is odd', () => {
+        it('Arrays have different length and arrays number is odd', () => {
             const data3 = [
                 [1, 10, 11, 15, 16, 19],
                 [2, 4, 9, 14],
