@@ -23,6 +23,12 @@ Solution (prints duplicate permutations):
 [AB]C  [AC]B  [BA]C [BC]A  [CB]A [CA]B
 */
 
+function swap(arr, i, j) {
+    const tmp = arr[i];
+    arr[i] = arr[j];
+    arr[j] = tmp;
+}
+
 function permutate(str) {
     const result = [];
 
@@ -32,15 +38,9 @@ function permutate(str) {
             return;
         }
         for (let i = j; i < arr.length; i++) {
-            const tmp = arr[i];
-            arr[i] = arr[j];
-            arr[j] = tmp;
-            // console.log('i:', i, 'j:', j, 'arr:', arr.join(''));
-
+            swap(arr, i, j);
             _permutate(arr, j + 1);
-            const tmp2 = arr[i];
-            arr[i] = arr[j];
-            arr[j] = tmp2;
+            swap(arr, i, j);
         }
     }
 
@@ -77,10 +77,27 @@ Output: AABC AACB ABAC ABCA ACBA ACAB BAAC BACA
 function permutateDistinct(str) {
     const result = [];
 
+    function _permutate(arr, j) {
+        if (j >= arr.length) {
+            result.push(arr.join(''));
+            return;
+        }
+        for (let i = j; i < arr.length; i++) {
+            if (arr[i] !== arr[j] || i === j) {
+                swap(arr, i, j);
+                _permutate(arr, j + 1);
+                swap(arr, i, j);
+            }
+        }
+    }
+
+    _permutate(str.split(''), 0);
+
     return result;
 }
 
 describe('Print all permutation of given string', () => {
+    // console.log(permutateDistinct('aba').join('\n'));
     // console.log(printAllSubstr('abcd').join(','));
     describe('With duplicate permutations', () => {
         it('Permutations of abc', () => {
@@ -89,5 +106,16 @@ describe('Print all permutation of given string', () => {
         });
     });
 
-    describe('All distinct permutations(without duplicates)', () => {});
+    describe('All distinct permutations(without duplicates)', () => {
+        it('Permutations of aba', () => {
+            const result = ['aba', 'aab', 'baa'];
+            expect(permutateDistinct('aba')).toEqual(result);
+        });
+
+        it('Permutations of abac', () => {
+            // prettier-ignore
+            const result = ['abac', 'abca', 'aabc', 'aacb', 'acab', 'acba', 'baac', 'baca', 'bcaa', 'cbaa', 'caba', 'caab', 'caab', 'caba'];
+            expect(permutateDistinct('abac')).toEqual(result);
+        });
+    });
 });
