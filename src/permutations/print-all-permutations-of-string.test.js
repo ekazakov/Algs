@@ -52,6 +52,7 @@ function permutate(str) {
 /*
 https://leetcode.com/problems/permutations-ii
 https://leetcode.com/problems/permutations-ii/discuss/18648/Share-my-Java-code-with-detailed-explanantion
+https://www.geeksforgeeks.org/distinct-permutations-string-set-2/
 
 Given a string that may contain duplicates, write a function to print all
 permutations of given string such that no permutation is repeated in output.
@@ -76,19 +77,41 @@ Output: AABC AACB ABAC ABCA ACBA ACAB BAAC BACA
 
 function permutateDistinct(str) {
     const result = [];
+    let level = -1;
 
-    function _permutate(arr, j) {
-        if (j >= arr.length) {
-            result.push(arr.join(''));
-            return;
-        }
-        for (let i = j; i < arr.length; i++) {
-            if (arr[i] !== arr[j] || i === j) {
-                swap(arr, i, j);
-                _permutate(arr, j + 1);
-                swap(arr, i, j);
+    const print = (...args) => {
+        console.log('\t'.repeat(level), ...args);
+    };
+
+    const shouldSwap = (str, curr, start) => {
+        print('should swap', 'start:', start, 'curr:', curr, ' [' + str.join(', ') + ']');
+        for (let i = start; i < curr; i++) {
+            print('i:', i, 'curr:', curr, 'str[i]', str[i], 'str[curr]', str[curr]);
+            if (str[i] === str[curr]) {
+                return false;
             }
         }
+        return true;
+    };
+/*
+
+*/
+    function _permutate(arr, curr) {
+        level++;
+        if (curr >= arr.length) {
+            result.push(arr.join(''));
+            level--;
+            return;
+        }
+        print('arr:', arr.join(', '));
+        for (let i = curr; i < arr.length; i++) {
+            if (shouldSwap(arr, i, curr)) {
+                swap(arr, i, curr);
+                _permutate(arr, curr + 1);
+                swap(arr, i, curr);
+            }
+        }
+        level--;
     }
 
     _permutate(str.split(''), 0);
@@ -97,8 +120,6 @@ function permutateDistinct(str) {
 }
 
 describe('Print all permutation of given string', () => {
-    // console.log(permutateDistinct('aba').join('\n'));
-    // console.log(printAllSubstr('abcd').join(','));
     describe('With duplicate permutations', () => {
         it('Permutations of abc', () => {
             const result = ['abc', 'acb', 'bac', 'bca', 'cba', 'cab'];
@@ -112,9 +133,25 @@ describe('Print all permutation of given string', () => {
             expect(permutateDistinct('aba')).toEqual(result);
         });
 
+        it('Permutations of aaa', () => {
+            const result = ['aaa'];
+            expect(permutateDistinct('aaa')).toEqual(result);
+        });
+
+        it('Permutations of aab', () => {
+            const result = ['aab', 'aba', 'baa'];
+            expect(permutateDistinct('aab')).toEqual(result);
+        });
+
+        it.only('Permutations of aab', () => {
+            console.log(permutateDistinct('baa').join('\n'))
+            const result = ['baa', 'aba', 'aab'];
+            // expect(permutateDistinct('baa')).toEqual(result);
+        });
+
         it('Permutations of abac', () => {
             // prettier-ignore
-            const result = ['abac', 'abca', 'aabc', 'aacb', 'acab', 'acba', 'baac', 'baca', 'bcaa', 'cbaa', 'caba', 'caab', 'caab', 'caba'];
+            const result = ['abac', 'abca', 'aabc', 'aacb', 'acab', 'acba', 'baac', 'baca', 'bcaa', 'cbaa', 'caba', 'caab'];
             expect(permutateDistinct('abac')).toEqual(result);
         });
     });
