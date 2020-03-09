@@ -1,6 +1,6 @@
 // https://www.geeksforgeeks.org/write-a-c-program-to-print-all-permutations-of-a-given-string/
 
-/*
+/**
 A permutation, also called an “arrangement number” or “order,” is a rearrangement of the
 elements of an ordered list S into a one-to-one correspondence with S itself. A string of length n has n! permutation.
 
@@ -8,7 +8,7 @@ Below are the permutations of string ABC.
 ABC ACB BAC BCA CBA CAB
 */
 
-/*
+/**
 Solution (prints duplicate permutations):
 1. Let j=0; In a loop swap str[i] with str[j]
 2. Recursively call solution function with permutated
@@ -49,7 +49,7 @@ function permutate(str) {
     return result;
 }
 
-/*
+/**
 https://leetcode.com/problems/permutations-ii
 https://leetcode.com/problems/permutations-ii/discuss/18648/Share-my-Java-code-with-detailed-explanantion
 https://www.geeksforgeeks.org/distinct-permutations-string-set-2/
@@ -80,7 +80,7 @@ function permutateDistinct(str) {
     let level = -1;
 
     const print = (...args) => {
-        console.log('\t'.repeat(level), ...args);
+        // console.log('\t'.repeat(level), ...args);
     };
 
     const shouldSwap = (str, curr, start) => {
@@ -93,7 +93,7 @@ function permutateDistinct(str) {
         }
         return true;
     };
-/*
+    /*
 
 */
     function _permutate(arr, curr) {
@@ -117,6 +117,55 @@ function permutateDistinct(str) {
     _permutate(str.split(''), 0);
 
     return result;
+}
+
+/**
+ https://www.techiedelight.com/generate-permutations-string-java-recursive-iterative
+
+ Берем 1й символ и сохраняем его в массива неполных перестаново(подстрок).
+ -В цикле начиная со 2го символа:
+    - Запускаем подцикл по все сохраненным на текущий момент неполным перестановкам
+        - Вытаскиваем последнюю неполную строку перестановок — partial
+        - во все позиции(перед, после, между каждым символом) partial подставляем текущий символ
+          и сохраняем новую строку в массив перестановок. Так получаем новые неполные перестановки.
+ - По окончанию всех циклов получим массив со всеми полными перестановками
+
+ Пример:
+ Дано: "abc"
+ 0. a
+ 1. b + a
+    a + b
+ 2. c + ba
+    b + c + a
+    ba + c
+    c + ab
+    a + c + b
+    ab + c
+*/
+
+function permutateIterative(str) {
+    const partials = [];
+    partials.push(str[0]);
+
+    for (let i = 1; i < str.length; i++) {
+        let j = partials.length;
+        // console.log('partials:', partials.join(', '));
+        // console.log('i', i, 'len:', j);
+        while (j > 0) {
+            const partial = partials.pop();
+            // console.log('pop:', partial);
+
+            for (let k = 0; k <= partial.length; k++) {
+                const newPartial = partial.slice(0, k) + str[i] + partial.slice(k);
+                // console.log('newPartial:', newPartial);
+                partials.unshift(newPartial);
+            }
+
+            j--;
+        }
+    }
+
+    return partials;
 }
 
 describe('Print all permutation of given string', () => {
@@ -143,16 +192,24 @@ describe('Print all permutation of given string', () => {
             expect(permutateDistinct('aab')).toEqual(result);
         });
 
-        it.only('Permutations of aab', () => {
-            console.log(permutateDistinct('baa').join('\n'))
+        it('Permutations of aab', () => {
+            // console.log(permutateDistinct('baa').join('\n'))
             const result = ['baa', 'aba', 'aab'];
-            // expect(permutateDistinct('baa')).toEqual(result);
+            expect(permutateDistinct('baa')).toEqual(result);
         });
 
         it('Permutations of abac', () => {
             // prettier-ignore
             const result = ['abac', 'abca', 'aabc', 'aacb', 'acab', 'acba', 'baac', 'baca', 'bcaa', 'cbaa', 'caba', 'caab'];
             expect(permutateDistinct('abac')).toEqual(result);
+        });
+    });
+
+    describe('Iterative solution', () => {
+        it('Permutations of abc', () => {
+            // console.log(permutateDistinct('baa').join('\n'))
+            const result = ['abc', 'acb', 'cab', 'bac', 'bca', 'cba'];
+            expect(permutateIterative('abc')).toEqual(result);
         });
     });
 });
