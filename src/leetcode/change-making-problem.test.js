@@ -27,58 +27,27 @@ function minExchangeCount(coins, sum, memo = {}) {
     return count;
 }
 
+// https://runestone.academy/runestone/books/published/pythonds/Recursion/DynamicProgramming.html
 function minExchangeCountIter(coins, sum) {
     const table = [0];
     let minCount = 0;
 
     for (let i = 1; i <= sum; i++) {
-        let noExchange = true;
-        minCount = i;
+        minCount = Infinity;
 
         for (let j = 0; j < coins.length; j++) {
             if (coins[j] <= i) {
-                noExchange = false;
                 const prev = i - coins[j];
                 minCount = Math.min(minCount, table[prev] + 1);
             }
         }
 
-        if (noExchange) {
-            minCount = Infinity;
-        }
         table[i] = minCount;
         // console.log('i:', i, 'minCount:', minCount);
     }
 
     return minCount;
 }
-
-function minExchangeCountWithCoins(coins, sum) {
-    const table = [0];
-    let minCount = 0;
-
-    for (let i = 1; i <= sum; i++) {
-        let noExchange = true;
-        minCount = i;
-
-        for (let j = 0; j < coins.length; j++) {
-            if (coins[j] <= i) {
-                noExchange = false;
-                const prev = i - coins[j];
-                minCount = Math.min(minCount, table[prev] + 1);
-            }
-        }
-
-        if (noExchange) {
-            minCount = Infinity;
-        }
-        table[i] = minCount;
-        // console.log('i:', i, 'minCount:', minCount);
-    }
-
-    return minCount;
-}
-
 
 describe('Min number of coins to exchange sum', () => {
     describe('Recursive solution', () => {
@@ -155,6 +124,79 @@ describe('Min number of coins to exchange sum', () => {
         it('Exchange 40 with 1¢, 3¢, 5¢', () => {
             expect(minExchangeCountIter([1, 3, 5], 40)).toEqual(8);
         });
+    });
+});
+
+function minExchangeCoins(coins, sum) {
+    const table = [0];
+    const coinsUsage = [0];
+    const result = [];
+    let minCount = 0;
+    let coin = 0;
+
+    for (let i = 1; i <= sum; i++) {
+        minCount = Infinity;
+
+        for (let j = 0; j < coins.length; j++) {
+            if (coins[j] <= i) {
+                const prev = i - coins[j];
+                if (minCount > table[prev] + 1) {
+                    minCount = table[prev] + 1;
+                    coin = coins[j];
+                }
+            }
+        }
+
+        coinsUsage[i] = minCount === Infinity ? null : coin;
+        table[i] = minCount;
+        // console.log('i:', i, 'minCount:', minCount, 'coin:', coin);
+    }
+
+    let index = sum;
+    while (result.length < minCount) {
+        const coin = coinsUsage[index];
+        index = index - coin;
+        result.push(coin);
+    }
+
+    return result;
+}
+
+describe('Min number of coins to exchange sum — coins list', function() {
+    it('Exchange 25 with 10¢, 5¢', () => {
+        expect(minExchangeCoins([5, 10], 25)).toEqual([5, 10, 10]);
+    });
+
+    it('Exchange 63 with 3¢, 10¢, 21¢, 25¢', () => {
+        expect(minExchangeCoins([3, 10, 21, 25], 63)).toEqual([21, 21, 21]);
+    });
+
+    it('Exchange 7 with 1¢, 10¢', () => {
+        expect(minExchangeCoins([1, 10], 7)).toEqual([1, 1, 1, 1, 1, 1, 1]);
+    });
+
+    it('Exchange 25 with 10¢, 15¢', () => {
+        expect(minExchangeCoins([15, 10], 25)).toEqual([15, 10]);
+    });
+
+    it('Exchange 25 with 25¢, 5¢', () => {
+        expect(minExchangeCoins([25, 5], 25)).toEqual([25]);
+    });
+
+    it('Exchange 25 with 26¢, 5¢', () => {
+        expect(minExchangeCoins([26, 5], 25)).toEqual([5, 5, 5, 5, 5]);
+    });
+
+    it('Exchange 8 with 1¢, 3¢, 5¢', () => {
+        expect(minExchangeCoins([1, 3, 5], 8)).toEqual([3, 5]);
+    });
+
+    it('Exchange 30 with 1¢, 3¢, 5¢', () => {
+        expect(minExchangeCoins([1, 3, 5], 30)).toEqual([5, 5, 5, 5, 5, 5]);
+    });
+
+    it('Exchange 11 with 1¢, 3¢, 5¢', () => {
+        expect(minExchangeCoins([1, 3, 5], 11)).toEqual([1, 5, 5]);
     });
 });
 
