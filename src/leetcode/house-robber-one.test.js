@@ -1,6 +1,7 @@
 // https://leetcode.com/problems/house-robber/
 // https://medium.com/outco/how-to-solve-the-house-robber-problem-f3535ebaef1b
 // https://stackoverflow.com/questions/46289231/leetcodes-house-robber-problem-path-cant-print-path
+// ** https://avikdas.com/2019/04/15/a-graphical-introduction-to-dynamic-programming.html
 function maxGoldAtRecursive(houses) {
     function _maxGoldAt(index) {
         if (index >= houses.length) {
@@ -57,30 +58,17 @@ function maxGoldAt(arr) {
 function maxGoldAtItems(arr) {
     let curSum = 0;
     let prevSum = 0;
-    let prevPrevSum = 0;
     const result = [];
 
-    console.log('arr:', arr.join(', '));
-    for (let i = 0; i < arr.length; i++) {
-        console.log(
-            `[${i}]`,
-            'curSum:',
-            curSum,
-            'prevSum:',
-            prevSum,
-            'item:',
-            arr[i],
-            'prevPrevSum:',
-            prevPrevSum
-        );
+    for (let i = 2; i < arr.length; i++) {
+        // prettier-ignore
+        // console.log(`[${i}]`, 'curSum:', curSum, 'prevSum:', prevSum, 'item:', arr[i]);
         const maxSum = Math.max(curSum, prevSum + arr[i]);
 
-        prevPrevSum = prevSum;
         prevSum = curSum;
         curSum = maxSum;
     }
 
-    // console.log('result:', result.join(', '));
     return result;
 }
 
