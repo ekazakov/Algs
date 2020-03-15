@@ -1,4 +1,5 @@
 // https://leetcode.com/problems/longest-palindromic-subsequence/
+// https://www.geeksforgeeks.org/longest-palindromic-subsequence-dp-12/
 // Given a string s, find the longest palindromic subsequence's
 // length in s. You may assume that the maximum length of s is 1000.
 
