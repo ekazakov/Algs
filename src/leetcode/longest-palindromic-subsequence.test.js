@@ -76,16 +76,17 @@ const lps3 = function(str) {
     // console.log(table.join('\n'));
     // итеририруемся по всем подстрокам начиная с двухсимвольных
     for (let cl = 2; cl <= str.length; cl++) {
+        // i — первый индекс подстроки
         for (let i = 0; i <= str.length - cl; i++) {
-            j = i + cl - 1;
+            j = i + cl - 1; // j — последний индекс подстроки
             // console.log('substr:', str.slice(i, j + 1), 'i:', i, 'j:', j);
 
             // если символы равны, то длинна текущей ПП = 2 + длинна ПП меньшей на 2 символа
             if (str[i] === str[j]) {
                 table[i][j] = table[i + 1][j - 1] + 2;
             } else {
-            // если символы разные, то берем макс длинну для уже пощитанных ПП.
-            // Которые короче на один символ слева или справа
+                // если символы разные, то берем макс длинну для уже пощитанных ПП.
+                // Которые короче на один символ слева или справа
                 table[i][j] = Math.max(table[i + 1][j], table[i][j - 1]);
             }
         }
@@ -129,6 +130,52 @@ const lps3 = function(str) {
 // 0,0,1,1
 // 0,0,0,1
 
+// O(n) space solution
+// https://www.geeksforgeeks.org/longest-palindrome-subsequence-space/
+// Из прошлого решения видно, что для поиска следующего решения всегда используем
+// только данные из двух соседних строк, то можно ужаться до одномерного массива
+const lps4 = function(str) {
+    const print = (...args) => console.log(...args);
+    // const print = (...args) => {};
+    //  создаем таблицу для хранения длин подстрок-полиндромов(ПП)
+    const table = new Array(str.length).fill(0);
+    print('input:', str);
+    print(table.join(', '));
+
+    for (let i = str.length - 1; i >= 0; i--) {
+        let prev = 0;
+        print(`--${str.length - i - 1}-----------------------------`);
+        for (let j = i; j < str.length; j++) {
+            print('substr:', str.slice(i, j + 1), 'i:', i, 'j:', j, 'prev:', prev);
+            if (j === i) {
+                table[j] = 1;
+            }
+            // если символы равны, то длинна текущей ПП = 2 + длинна ПП меньшей на 2 символа
+            else if (str[i] === str[j]) {
+                const tmp = table[j];
+                table[j] = prev + 2;
+                prev = tmp;
+            } else {
+                // если символы разные, то берем макс длинну для уже пощитанных ПП.
+                // Которые короче на один символ слева или справа
+                prev = table[j];
+                table[j] = Math.max(table[j], table[j - 1]);
+            }
+            // prev = table[j];
+            print(table.join(', '));
+        }
+    }
+
+    print('result:', table[str.length - 1]);
+
+    return table[str.length - 1];
+};
+
+// lps4('bcbd');
+// lps4('bbcd');
+lps4('cbaabd');
+
+const describe = () => {};
 
 describe('Is palindrome', function() {
     it('empty string', () => {
@@ -219,7 +266,7 @@ describe('longest palindromic subsequence', function() {
         });
     });
 
-    describe('DP solution', function() {
+    describe('DP solution with O(n^2) space', function() {
         it('cbbd', () => {
             expect(lps3('cbbd')).toBe(2);
         });
@@ -249,6 +296,39 @@ describe('longest palindromic subsequence', function() {
             const str =
                 'euazbipzncptldueeuechubrcourfpftcebikrxhybkymimgvldiwqvkszfycvqyvtiwfckexmowcxztkfyzqovbtmzpxojfofbvwnncajvrvdbvjhcrameamcfmcoxryjukhpljwszknhiypvyskmsujkuggpztltpgoczafmfelahqwjbhxtjmebnymdyxoeodqmvkxittxjnlltmoobsgzdfhismogqfpfhvqnxeuosjqqalvwhsidgiavcatjjgeztrjuoixxxoznklcxolgpuktirmduxdywwlbikaqkqajzbsjvdgjcnbtfksqhquiwnwflkldgdrqrnwmshdpykicozfowmumzeuznolmgjlltypyufpzjpuvucmesnnrwppheizkapovoloneaxpfinaontwtdqsdvzmqlgkdxlbeguackbdkftzbnynmcejtwudocemcfnuzbttcoew';
             expect(lps3(str)).toBe(159);
+        });
+    });
+
+    describe('DP solution with O(n) space', function() {
+        it('cbbd', () => {
+            expect(lps4('cbbd')).toBe(2);
+        });
+
+        it('abccba', () => {
+            expect(lps4('abccba')).toBe(6);
+        });
+        it('abcdecba', () => {
+            expect(lps4('abcdecba')).toBe(7);
+        });
+        it('aaabbbb', () => {
+            expect(lps4('aaabbbb')).toBe(4);
+        });
+
+        it('acabdbebgbaa', () => {
+            expect(lps4('acabdbebgbaa')).toBe(9);
+        });
+        it('aaabbbbaaaa', () => {
+            expect(lps4('aaabbbbaaaa')).toBe(10);
+        });
+
+        it('abacababacab', () => {
+            expect(lps4('abacababacab')).toBe(11);
+        });
+
+        it('very long', () => {
+            const str =
+                'euazbipzncptldueeuechubrcourfpftcebikrxhybkymimgvldiwqvkszfycvqyvtiwfckexmowcxztkfyzqovbtmzpxojfofbvwnncajvrvdbvjhcrameamcfmcoxryjukhpljwszknhiypvyskmsujkuggpztltpgoczafmfelahqwjbhxtjmebnymdyxoeodqmvkxittxjnlltmoobsgzdfhismogqfpfhvqnxeuosjqqalvwhsidgiavcatjjgeztrjuoixxxoznklcxolgpuktirmduxdywwlbikaqkqajzbsjvdgjcnbtfksqhquiwnwflkldgdrqrnwmshdpykicozfowmumzeuznolmgjlltypyufpzjpuvucmesnnrwppheizkapovoloneaxpfinaontwtdqsdvzmqlgkdxlbeguackbdkftzbnynmcejtwudocemcfnuzbttcoew';
+            expect(lps4(str)).toBe(159);
         });
     });
 });
