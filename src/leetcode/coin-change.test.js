@@ -1,3 +1,4 @@
+// https://leetcode.com/problems/coin-change/
 // https://avikdas.com/2019/04/15/a-graphical-introduction-to-dynamic-programming.html
 /*
 We have denominations 1¢, 3¢, 5¢ and we want to make 16¢.
@@ -200,57 +201,61 @@ describe('Min number of coins to exchange sum — coins list', function() {
     });
 });
 
-function exchangeCount(coins, sum, memo = {}) {
-    let acc = 0;
+// function exchangeCount(coins, sum, memo = {}) {
+//     let acc = 0;
+//
+//     if (sum === 0) {
+//         return 1;
+//     }
+//
+//     if (memo[sum] != null) {
+//         return memo[sum];
+//     }
+//
+//     for (let i = 0; i < coins.length; i++) {
+//         if (sum - coins[i] >= 0) {
+//             acc += exchangeCount(coins, sum - coins[i], memo);
+//         }
+//     }
+//
+//     memo[sum] = acc;
+//     return acc;
+// }
 
-    if (sum === 0) {
-        return 1;
-    }
-
-    if (memo[sum] != null) {
-        return memo[sum];
-    }
-
-    for (let i = 0; i < coins.length; i++) {
-        if (sum - coins[i] >= 0) {
-            acc += exchangeCount(coins, sum - coins[i], memo);
-        }
-    }
-
-    memo[sum] = acc;
-    return acc;
-}
-
-describe('Number ways to exchange sum with coins', () => {
-    it('Exchange 25 with 10¢, 5¢', () => {
-        expect(exchangeCount([5, 10], 25)).toEqual(8);
-    });
-
-    it('Exchange 25 with 10¢, 15¢', () => {
-        expect(exchangeCount([15, 10], 25)).toEqual(2);
-    });
-
-    it('Exchange 25 with 25¢, 5¢', () => {
-        expect(exchangeCount([25, 5], 25)).toEqual(2);
-    });
-
-    it('Exchange 25 with 26¢, 5¢', () => {
-        expect(exchangeCount([26, 5], 25)).toEqual(1);
-    });
-
-    it('Exchange 25 with 26¢', () => {
-        expect(exchangeCount([26], 25)).toEqual(0);
-    });
-
-    it('Exchange 8 with 1¢, 3¢, 5¢', () => {
-        expect(exchangeCount([1, 3, 5], 8)).toEqual(19);
-    });
-
-    it('Exchange 30 with 1¢, 3¢, 5¢', () => {
-        expect(exchangeCount([1, 3, 5], 30)).toEqual(390257);
-    });
-
-    it('Exchange 40 with 1¢, 3¢, 5¢', () => {
-        expect(exchangeCount([1, 3, 5], 40)).toEqual(35543051);
-    });
-});
+// describe('Number ways to exchange sum with coins', () => {
+//     it('Exchange 5 with 1¢, 2¢, 5¢', () => {
+//         expect(exchangeCount([1, 2, 5], 5)).toEqual(9);
+//     });
+//
+//     it('Exchange 25 with 10¢, 5¢', () => {
+//         expect(exchangeCount([5, 10], 25)).toEqual(8);
+//     });
+//
+//     it('Exchange 25 with 10¢, 15¢', () => {
+//         expect(exchangeCount([15, 10], 25)).toEqual(2);
+//     });
+//
+//     it('Exchange 25 with 25¢, 5¢', () => {
+//         expect(exchangeCount([25, 5], 25)).toEqual(2);
+//     });
+//
+//     it('Exchange 25 with 26¢, 5¢', () => {
+//         expect(exchangeCount([26, 5], 25)).toEqual(1);
+//     });
+//
+//     it('Exchange 25 with 26¢', () => {
+//         expect(exchangeCount([26], 25)).toEqual(0);
+//     });
+//
+//     it('Exchange 8 with 1¢, 3¢, 5¢', () => {
+//         expect(exchangeCount([1, 3, 5], 8)).toEqual(19);
+//     });
+//
+//     it('Exchange 30 with 1¢, 3¢, 5¢', () => {
+//         expect(exchangeCount([1, 3, 5], 30)).toEqual(390257);
+//     });
+//
+//     it('Exchange 40 with 1¢, 3¢, 5¢', () => {
+//         expect(exchangeCount([1, 3, 5], 40)).toEqual(35543051);
+//     });
+// });
