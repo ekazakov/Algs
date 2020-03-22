@@ -32,9 +32,9 @@ function printAllSubstr(str) {
 }
 
 describe('Print all non-empty substrings of given string', () => {
-    // console.log(printAllSubstr('abcd').join(','));
     it('abcd', () => {
         const result = ['a', 'b', 'c', 'd', 'ab', 'bc', 'cd', 'abc', 'bcd', 'abcd'];
         expect(printAllSubstr('abcd')).toEqual(result);
     });
 });
+
