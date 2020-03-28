@@ -77,14 +77,31 @@ const change1 = function(coins, amount) {
     return t[coins.length][amount];
 };
 
+// Example
+// coins: [ 1, 2, 5 ]
+// amount: 5
+// coin[0]: 1, curAmount: 1 t: [1, 1, 0, 0, 0, 0]
+// coin[0]: 1, curAmount: 2 t: [1, 1, 1, 0, 0, 0]
+// coin[0]: 1, curAmount: 3 t: [1, 1, 1, 1, 0, 0]
+// coin[0]: 1, curAmount: 4 t: [1, 1, 1, 1, 1, 0]
+// coin[0]: 1, curAmount: 5 t: [1, 1, 1, 1, 1, 1]
+// coin[1]: 2, curAmount: 2 t: [1, 1, 2, 1, 1, 1]
+// coin[1]: 2, curAmount: 3 t: [1, 1, 2, 2, 1, 1]
+// coin[1]: 2, curAmount: 4 t: [1, 1, 2, 2, 3, 1]
+// coin[1]: 2, curAmount: 5 t: [1, 1, 2, 2, 3, 3]
+// coin[2]: 5, curAmount: 5 t: [1, 1, 2, 2, 3, 4]
+
 const change2 = function(coins, amount) {
     const t = new Array(amount + 1).fill(0);
     t[0] = 1;
 
+    console.log('coins:', coins);
+    console.log('amount:', amount);
     for (let i = 0; i <= coins.length; i++) {
         const coin = coins[i];
         for (let j = coin; j <= amount; j++) {
-            t[j] += t[j - coin];
+            t[j] = t[j] + t[j - coin];
+            console.log(`coin[${i}]: ${coin}, curAmount: ${j} t: [${t.join(', ')}]`);
         }
     }
 
@@ -93,8 +110,10 @@ const change2 = function(coins, amount) {
 
 // change(11, [1, 3, 5]);
 // change(8, [1, 3, 5]);
-// change(5, [1, 2, 5]);
+// change2([1, 2, 5], 5);
 // change(3, [2]);
+
+// const describe = () => {};
 
 describe('Number ways to exchange sum with coins', () => {
     describe('O(n^2) space solution', function() {
@@ -188,5 +207,4 @@ describe('Number ways to exchange sum with coins', () => {
         //     expect(change([1, 3, 5], 40)).toEqual(35543051);
         // });
     });
-
 });
