@@ -4,6 +4,10 @@ function Node(val, next = null) {
 }
 
 function buildList(items) {
+    if (!items || items.length === 0) {
+        return null;
+    }
+
     let head = new Node(items[0]);
     let current = head;
 

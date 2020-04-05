@@ -1,4 +1,4 @@
-const { Node, buildList, lToA, lToS } = require('./list-tools');
+const { Node, buildList } = require('./list-tools');
 
 const buildListWithLoop = (items, startIndex) => {
     let head = null;
@@ -26,63 +26,51 @@ const buildListWithLoop = (items, startIndex) => {
     return head;
 };
 
-// 1 -> 2 -> 3 -> 4 -> 5 -> 6
-//           ^ -------------|
-
-function detectLoop(head) {
+function loopLength(head) {
     let slow = head;
     let fast = head;
-    let i = 0;
     while (fast && fast.next) {
-        // console.log('fast:', fast.val);
-        // console.log('slow:', slow.val);
-
-        fast = fast.next;
-        if (slow === fast) {
-            // console.log('fast:', fast.val);
-            // console.log('slow:', slow.val);
-            return true;
-        }
-        fast = fast.next;
+        fast = fast.next.next;
         slow = slow.next;
 
         if (slow === fast) {
-            // console.log('fast:', fast.val);
-            // console.log('slow:', slow.val);
-            return true;
-        }
-        i++;
-        if (i > 100) {
-            return;
+            break;
         }
     }
 
-    return false;
+    if (slow !== fast) {
+        return 0;
+    }
+
+    let counter = 1;
+    slow = slow.next;
+    while (slow !== fast) {
+        slow = slow.next;
+        counter++;
+    }
+
+    return counter;
 }
 
-const list1 = buildListWithLoop([1, 2, 3, 4, 5, 6], 2);
-detectLoop(list1);
-
-// const describe = () => {};
-describe('Detect loop in linked list', function() {
+describe('Calculate length of a loop in a linked list', function() {
     const list1 = buildListWithLoop([1, 2, 3, 4, 5], 2);
     const list2 = buildList([1, 2, 3, 4, 5, 6]);
     const list3 = buildListWithLoop([1, 2, 3], 0);
     const list4 = buildListWithLoop([1, 2, 3], 2);
 
     it('Has loop', () => {
-        expect(detectLoop(list1)).toBe(true);
+        expect(loopLength(list1)).toBe(3);
     });
 
     it('No loop', () => {
-        expect(detectLoop(list2)).toBe(false);
+        expect(loopLength(list2)).toBe(0);
     });
 
     it('Has full loop', () => {
-        expect(detectLoop(list3)).toBe(true);
+        expect(loopLength(list3)).toBe(3);
     });
 
     it('Has loop in last item', () => {
-        expect(detectLoop(list4)).toBe(true);
+        expect(loopLength(list4)).toBe(1);
     });
 });
