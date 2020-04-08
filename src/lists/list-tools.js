@@ -20,6 +20,9 @@ function buildList(items) {
 }
 
 function lToA(head) {
+    if (!head) {
+        return [];
+    }
     const arr = [head.val];
     let current = head;
     while (current.next != null) {
@@ -31,6 +34,9 @@ function lToA(head) {
 }
 
 function lToS(head) {
+    if (!head) {
+        return '(empty list)';
+    }
     return lToA(head).join(' -> ');
 }
 

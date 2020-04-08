@@ -1,10 +1,14 @@
 const { buildList } = require('./list-tools');
 
 function findMiddle(head) {
+    if (!head) {
+        return head;
+    }
+
     let slow = head;
     let fast = head;
 
-    while (fast && fast.next) {
+    while (fast.next && fast.next.next) {
         fast = fast.next.next;
         slow = slow.next;
     }
@@ -21,6 +25,11 @@ describe('Find linked list middle', function() {
     });
 
     it('Event list', () => {
-        expect(findMiddle(list2)).toBe(4);
+        expect(findMiddle(list2)).toBe(3);
+    });
+
+    it('Two items', () => {
+        const list = buildList([1,2]);
+        expect(findMiddle(list)).toBe(1);
     });
 });
