@@ -36,14 +36,10 @@ function sortStack(stack) {
 
     while (!stack.isEmpty()) {
         const tmp = stack.pop();
-        if (tmp <= helper.peek()) {
-            helper.push(tmp);
-        } else {
-            while (!helper.isEmpty() && tmp > helper.peek()) {
-                stack.push(helper.pop());
-            }
-            helper.push(tmp);
+        while (!helper.isEmpty() && tmp > helper.peek()) {
+            stack.push(helper.pop());
         }
+        helper.push(tmp);
     }
 
     while (!helper.isEmpty()) {
