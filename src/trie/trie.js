@@ -1,4 +1,5 @@
 const A = 'a'.charCodeAt(0);
+const letters = 'abcdefghijklmnopqrstuvwxyz';
 
 class TrieNode {
     constructor() {
@@ -89,11 +90,11 @@ class Trie {
             node = node.get(char);
         }
 
-        if (!word.isEnd) {
+        if (!node.isEnd) {
             return false;
         }
 
-        word.isEnd = false;
+        node.isEnd = false;
         if (!node.isLeaf()) {
             return true;
         }
@@ -111,9 +112,28 @@ class Trie {
         return true;
     }
 
-    forEach() {}
+    forEach(cb) {
+        const traverse = (word, node = this.root) => {
+            if (node.isEnd) {
+                cb(word);
+            }
+            node.children.forEach((child, index) => {
+                if (child) {
+                    traverse(word + letters[index], child);
+                }
+            });
+        };
+        traverse('');
+    }
 
-    toArray() {}
+    toArray() {
+        let words = [];
+        this.forEach(word => {
+            words.push(word);
+        });
+
+        return words;
+    }
 }
 
 exports.Trie = Trie;
