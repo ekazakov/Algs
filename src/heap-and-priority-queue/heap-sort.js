@@ -1,9 +1,3 @@
-function percolateUp() {}
-
-function percolateDown() {}
-
-function remove() {}
-
 function createBinaryHeap(data) {
     let size = data.length;
 

@@ -326,7 +326,7 @@ describe('Longest Common Subsequence', () => {
             ).toEqual(6);
         });
 
-        it.only('hergrwzsjgjmnwfwjyxyhafstetgbydobynmxabavodsfwbqbevozkjkpwvw & pgrwlabutilctsrgbgxorwjezspgxwredqjklabwterwzyzstwpobwjujwjkb', () => {
+        it('hergrwzsjgjmnwfwjyxyhafstetgbydobynmxabavodsfwbqbevozkjkpwvw & pgrwlabutilctsrgbgxorwjezspgxwredqjklabwterwzyzstwpobwjujwjkb', () => {
             expect(
                 longestCommonSubsequence2(
                     'hergrwzsjgjmnwfwjyxyhafstetgbydobynmxabavodsfwbqbevozkjkpwvw',
@@ -337,9 +337,3 @@ describe('Longest Common Subsequence', () => {
     });
 });
 
-var filterWifi = document.querySelector('#filter-wifi');
-var filterDishwasher = document.querySelector('#filter-dishwasher');
-var filterParking = document.querySelector('#filter-parking');
-var filterWasher = document.querySelector('#filter-washer');
-var filterElevator = document.querySelector('#filter-elevator');
-var filterConditioner = document.querySelector('#filter-conditioner');

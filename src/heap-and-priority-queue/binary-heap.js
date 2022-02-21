@@ -1,23 +1,5 @@
 const floordiv = (val, devider) => Math.floor(val / devider);
 
-function node(val, left, right) {
-    return {
-        val,
-        left,
-        right
-    };
-}
-
-function buildTree(data, i = 1) {
-    const leftIndex = i * 2;
-    const rightIndex = i * 2 + 1;
-
-    const left = leftIndex < data.length ? buildTree(data, leftIndex) : null;
-    const right = rightIndex < data.length ? buildTree(data, rightIndex) : null;
-
-    return node(data[i], left, right);
-}
-
 // index from zero
 class BinaryHeap {
     constructor() {
@@ -48,8 +30,8 @@ class BinaryHeap {
                 this.data[parentIndex] = this.data[index];
                 this.data[index] = tmp;
             }
+            parentIndex = floordiv(index, 2);
         }
-        parentIndex = floordiv(index, 2);
     }
 
     insert(value) {
@@ -58,7 +40,7 @@ class BinaryHeap {
         this.percolateUp(this.currentSize);
     }
 
-    minChild(index) {
+    _minChild(index) {
         if (index * 2 + 2 > this.currentSize) {
             return index * 2 + 1;
         }
@@ -72,7 +54,7 @@ class BinaryHeap {
 
     percolateDown(index) {
         while (index * 2 + 1 <= this.currentSize) {
-            const minChildIndex = this.minChild(index);
+            const minChildIndex = this._minChild(index);
 
             if (this.data[index] > this.data[minChildIndex]) {
                 const tmp = this.data[index];
@@ -93,7 +75,7 @@ class BinaryHeap {
     }
 
     toString() {
-        return `[${this.data.join(', ')}]`
+        return `[${this.data.join(', ')}]`;
     }
 }
 

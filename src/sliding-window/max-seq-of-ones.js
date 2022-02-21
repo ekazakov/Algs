@@ -1,10 +1,10 @@
-/* 
-Given a binary array, find the index of 0 to be replaced 
+/*
+Given a binary array, find the index of 0 to be replaced
 with 1 to get maximum length sequence of continuous ones.
 
 https://www.techiedelight.com/find-index-0-replaced-get-maximum-length-sequence-of-continuous-ones/
 */
-export const findIndexOfMaxSeq = data => {
+const findIndexOfMaxSeq = data => {
   let index = -1;
   let maxIndex = -1;
   let maxLength = 0;
@@ -31,3 +31,5 @@ export const findIndexOfMaxSeq = data => {
 
   return maxIndex;
 };
+
+exports.findIndexOfMaxSeq = findIndexOfMaxSeq;
