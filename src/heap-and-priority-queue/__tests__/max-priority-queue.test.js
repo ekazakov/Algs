@@ -1,6 +1,6 @@
 const { MaxPriorityQueue } = require('../max-priority-queue');
 
-describe.only('MaxPriorityQueue', () => {
+describe('MaxPriorityQueue', () => {
     it('test1', () => {
         const values = 'SORTEXAMPLE'.split('');
         const pq = MaxPriorityQueue(values.length);
