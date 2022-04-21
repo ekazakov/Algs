@@ -1,4 +1,9 @@
-const { uniquePaths1, uniquePathsWithObstacles } = require('./uniuqe-path-06');
+const {
+    uniquePaths1,
+    uniquePathsWithObstacles,
+    maxProfitInAGrid,
+    maxProfitInAGridPath
+} = require('./uniuqe-path-06');
 
 describe('DP06. Unique paths in matrix', () => {
     describe('uniquePaths', () => {
@@ -29,8 +34,47 @@ describe('DP06. Unique paths in matrix', () => {
             ];
             expect(uniquePathsWithObstacles(m)).toEqual(3);
         });
-
-
     });
 
+    describe('maxProfitInAGrid', () => {
+        it('simple test', () => {
+            const m = [
+                [0, 2, 2, 1],
+                [3, 1, 1, 1],
+                [4, 4, 2, 0]
+            ];
+            expect(maxProfitInAGrid(m)).toEqual(13);
+        });
+
+        it('simple test 2', () => {
+            const m = [
+                [0, 2, 2, 50],
+                [3, 1, 1, 100],
+                [4, 4, 2, 0]
+            ];
+            expect(maxProfitInAGrid(m)).toEqual(154);
+        });
+    });
+
+    describe('maxProfitInAGridPath', () => {
+        it('simple test', () => {
+            const m = [
+                [0, 2, 2, 1],
+                [3, 1, 1, 1],
+                [4, 4, 2, 0]
+            ];
+            const path = ['(0,0)', '(1,0)', '(2,0)', '(2,1)', '(2,2)', '(2,3)'];
+            expect(maxProfitInAGridPath(m)).toEqual(path);
+        });
+
+        it('simple test 2', () => {
+            const m = [
+                [0, 2, 2, 50],
+                [3, 1, 1, 100],
+                [4, 4, 2, 0]
+            ];
+            const path = ['(0,0)', '(0,1)', '(0,2)', '(0,3)', '(1,3)', '(2,3)'];
+            expect(maxProfitInAGridPath(m)).toEqual(path);
+        });
+    });
 });
